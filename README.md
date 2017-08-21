@@ -4,5 +4,5 @@ Node js Login and registration app using MVC architecture
 <h3>Main Js</h3><code>app.js</code>
 <h3>Structure : </h3>
 <p>Views</p> <code> /views </code>
-<p>Route</p> <code> /route </code>
+<p>Route</p> <code> /controller </code>
 <p>Models</p> <code> /models </code>
