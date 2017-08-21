@@ -1,0 +1,11 @@
+{
+  "name": "node_mvc",
+  "version": "1.0.0",
+  "description": "login and registration with nodejs using MVC arch",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app"
+  },
+  "author": "Medet",
+  "license": "ISC"
+}
