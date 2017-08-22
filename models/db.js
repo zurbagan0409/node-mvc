@@ -33,7 +33,6 @@ class DB {
     checkUser(req, res){
         var username = req.body.username;
         var password = req.body.password;
-        console.log(username + " " + password);
         let sql = "SELECT * FROM `users` WHERE username='" + username + "'";
         return this.con.query(sql, (err, result, fields)=>{
             if(err) throw err;
