@@ -21,9 +21,13 @@ app.get('/login', routes.login_get);
 app.get('/register', routes.register_get);
 app.get('/profile', routes.profile_get);
 app.get('/logout', routes.logout_get);
+app.get('/addnews', routes.addnews_get);
+app.get('/news', routes.news_get);
+app.get('/news/:id', routes.newsid_get);
 //POST
 app.post('/register', urlencodedParser, routes.register_post);
 app.post('/login', urlencodedParser, routes.login_post);
+app.post('/addnews', urlencodedParser, routes.addnews_post);
 //Listen
 app.listen(3000, ()=>{
     console.log("Listening to port " + 3000);

@@ -36,7 +36,18 @@ routes.logout_get = (req, res) =>{
         res.redirect('/');
     });
 };
-
+routes.addnews_get = (req, res) => {
+    if(!req.session.username){
+        res.redirect('/');
+    }else{
+    res.render('addnews');}
+};
+routes.news_get = (req, res) => {
+    database.getAllNews(req, res);
+};
+routes.newsid_get = (req, res) => {
+    database.getNewsById(req, res);
+};
 //POST Requests
 routes.register_post = (req, res) => {
     if(req.session.username){
@@ -49,5 +60,11 @@ routes.login_post = (req, res) => {
         res.redirect('/profile');
     }else{
     database.checkUser(req, res);}
+};
+routes.addnews_post = (req, res) => {
+    if(!req.session.username){
+        res.redirect('/login');
+    }else{
+    database.addNews(req, res);}
 };
 module.exports = routes;

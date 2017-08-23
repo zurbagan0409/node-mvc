@@ -34,7 +34,7 @@ class DB {
         var username = req.body.username;
         var password = req.body.password;
         let sql = "SELECT * FROM `users` WHERE username='" + username + "'";
-        return this.con.query(sql, (err, result, fields)=>{
+        this.con.query(sql, (err, result, fields)=>{
             if(err) throw err;
             if(result.length === 1){
                 if(bcrypt.compareSync(password, result[0].password)) {    
@@ -47,7 +47,35 @@ class DB {
             }else{
                 res.redirect('/login?error=1');
             }
-        })
+        });
+    }
+    addNews(req, res){
+        var title = req.body.title;
+        var body = req.body.descr;
+        let sql = "INSERT INTO `news`(`id`, `title`, `descr`) VALUES ('','" + title + "','" + body + "')";
+        this.con.query(sql, (err, result)=>{
+            if(err) throw err;
+            res.redirect('/news');
+        });
+    }
+    getNewsById(req, res){
+        var id = req.params.id;
+        let sql = "SELECT * from news WHERE id = " + id;
+        this.con.query(sql, (err, result, field)=>{
+            if(err) throw err;
+            else{
+                res.render('newsid', {data : result[0]});
+            }
+        });
+    }
+    getAllNews(req, res){
+        let sql = "SELECT * from news";
+        this.con.query(sql, (err, result, field)=>{
+            if(err) throw err;
+            else{
+                res.render('news', {news : result});
+            }
+        });
     }
 }
 module.exports = DB;

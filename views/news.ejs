@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>News</title>
+    </head>
+    <body>
+        <h1>Welcome to news page</h1>
+        <% for(var i = 0; i < news.length; i++) { %>
+            <a href="/news/<%=news[i].id%>" ><p><%= news[i].title %></p></a><br>
+            <p><%= news[i].descr %></p>
+            <hr>
+        <% } %>
+    </body>
+</html>
