@@ -23,7 +23,7 @@ routes.register_get = (req, res) => {
     if(req.session.username){
         res.redirect('/profile');
     }else{
-    res.render('register');}
+    res.render('register', {error : req.query.error});}
 };
 routes.profile_get = (req, res) =>{
     if(!req.session.username){
@@ -67,4 +67,6 @@ routes.addnews_post = (req, res) => {
     }else{
     database.addNews(req, res);}
 };
+
+routes.database = database;
 module.exports = routes;

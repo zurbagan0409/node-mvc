@@ -19,21 +19,34 @@ class DB {
         this.con = con;
     }
     createUser(req, res){
-        var username = req.body.username;
+        var username = this.con.escape(req.body.username);
         var password = req.body.password;
-        var city = req.body.city;
-        var name = req.body.name;
+        var city = this.con.escape(req.body.city);
+        var name = this.con.escape(req.body.name);
+        if(password.length < 8){
+            res.redirect('/register?error=passlength');
+        }else{
         let hash = bcrypt.hashSync(password, 10);
-        let sql = "INSERT INTO `users`(`id`, `username`, `password`, `name`, `city`) VALUES ('','"+ username +"','"+ hash +"','"+ name +"','"+ city +"')";
-        this.con.query(sql, (err, result)=>{
+        var sql2 = "SELECT * FROM `users` WHERE username=" + username + "";
+        this.con.query(sql2, (err, result, field)=>{
             if(err) throw err;
-            res.redirect('/login');
+            if(result.length > 0){
+                res.redirect('/register?error=already');
+            }else{
+                let sql = "INSERT INTO `users`(`id`, `username`, `password`, `name`, `city`) VALUES ('',"+ username +",'"+ hash +"',"+ name +","+ city +")";
+                this.con.query(sql, (err, result)=>{
+                    if(err) throw err;
+                    res.redirect('/login');
+                });
+            }
         });
+        
+    }
     }
     checkUser(req, res){
-        var username = req.body.username;
+        var username = this.con.escape(req.body.username);
         var password = req.body.password;
-        let sql = "SELECT * FROM `users` WHERE username='" + username + "'";
+        let sql = "SELECT * FROM `users` WHERE username=" + username + "";
         this.con.query(sql, (err, result, fields)=>{
             if(err) throw err;
             if(result.length === 1){
@@ -76,6 +89,9 @@ class DB {
                 res.render('news', {news : result});
             }
         });
+    }
+    checkIfExists(res, username){
+        
     }
 }
 module.exports = DB;

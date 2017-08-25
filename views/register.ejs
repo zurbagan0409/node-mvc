@@ -7,6 +7,12 @@
         <h1>Register</h1>
         <a href="/">Index</a>
         <a href="/login">Login</a>
+        <%if(error === "passlength"){%>
+            <p style="color:red">Password must be longer than 8 symbols</p>
+        <%} %>
+        <%if(error === "already"){%>
+            <p style="color:red">This username is taken. Please choose another</p>
+        <%} %>
         <br><br>
         <form action="/register" method="post">
             <label for="username">Username : </label><br>
