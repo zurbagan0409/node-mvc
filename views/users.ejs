@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Index</title>
+    </head>
+    <body>
+        <h1>Welcome <%= session.username %></h1>
+        <p>Your id is <%= session.ids %></p>
+        <a href="/logout">Logout</a>
+        <a href="/addnews">Add news</a>
+        <a href="/news">News</a>
+        <a href="/profile">Profile</a>
+        
+        <ul>
+            <% for(var i = 0; i < data.length; i++) { %>
+            <li><a href="/chat/<%=data[i].id%>/<%=session.ids%>"><%= data[i].username %></a></li>
+            <% } %>
+        </ul>
+    </body>
+</html>

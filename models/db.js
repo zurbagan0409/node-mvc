@@ -93,5 +93,14 @@ class DB {
     checkIfExists(res, username){
         
     }
+    getAllUsers(req, res){
+        let sql = "SELECT * from users where NOT id = '" + req.session.ids + "'";
+        this.con.query(sql, (err, result, field)=>{
+            if(err) throw err;
+            else{
+                res.render('users', {data : result, session : req.session});
+            }
+        });
+    }
 }
 module.exports = DB;
