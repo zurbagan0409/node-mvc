@@ -28,8 +28,8 @@ routes.register_get = (req, res) => {
 routes.profile_get = (req, res) =>{
     if(!req.session.username){
         res.redirect('/login?error=2');
-    }else{
-    res.render('profile', {data : req.session});}
+    }
+    res.render('profile', {data : req.session});
 };
 routes.logout_get = (req, res) =>{
     req.session.destroy(function(err) {
@@ -48,25 +48,28 @@ routes.news_get = (req, res) => {
 routes.newsid_get = (req, res) => {
     database.getNewsById(req, res);
 };
-routes.userslist_get = (req, res) => {
-    if(!req.session.username){
-        res.redirect('/login?error=2');
+routes.users_get = (req, res) => {
+    if(req.session.ids){
+        database.getAllUsers(req, res);
     }else{
-        database.getAllUsers(req, res);    
+        res.redirect('/');
+    }
+}
+routes.chat_prepair_get = (req, res) => {
+    console.log(req.params.id1);
+    if(req.session.ids == req.params.id1 || req.session.ids == req.params.id2){
+        
+        database.checkChatIfExists(req, res);
+    }else{
+        res.redirect('/');
     }
 };
 routes.chat_get = (req, res) => {
-    if(req.params.id1 != req.session.ids && req.params.id2 != req.session.ids){
-        if(req.session.username){
-            //If User logged in but dont have access to this chat
-            res.redirect('/');
-        }else{
-            //If user not logged in
-            res.redirect('/login?error=2');
-        }
+    if(req.session.username){
+        database.getAllMessages(req, res);
     }else{
-        //Success
-        res.render('chat', {session : req.session, params : req.params});}
+        res.redirect('/');
+    }
 };
 //POST Requests
 routes.register_post = (req, res) => {

@@ -90,17 +90,54 @@ class DB {
             }
         });
     }
-    checkIfExists(res, username){
-        
-    }
     getAllUsers(req, res){
-        let sql = "SELECT * from users where NOT id = '" + req.session.ids + "'";
+        let sql = "SELECT * from users";
         this.con.query(sql, (err, result, field)=>{
             if(err) throw err;
             else{
-                res.render('users', {data : result, session : req.session});
+                res.render('users', {users : result, session : req.session});
             }
         });
     }
+    checkChatIfExists(req, res){
+        var id1 = Math.max(req.params.id1, req.params.id2);
+        var id2 = Math.min(req.params.id1, req.params.id2);
+        let sql = "SELECT * from chats WHERE user1_id='" + id1 + "' AND user2_id='" + id2 + "'";
+        this.con.query(sql, (err, result, field) => {
+            if(err) throw err;
+            else{
+                if(result.length === 1){
+                    console.log("asdasd");
+                    res.redirect('/chat/' + result[0].id);
+                }else{
+                    sql = "INSERT INTO chats (id, user1_id, user2_id) VALUES ('', '" + id1 + "', '" + id2 + "' )";
+                    this.con.query(sql, (err, result) => {
+                        if(err) throw err;
+                        else{
+                            res.redirect('/chat/' + id1 + '/' + id2);
+                        }
+                    });
+                }
+            }
+        });
+    }
+    addMessage(data) {
+        let sql = "INSERT INTO messages (id, text, chat_id, date, sender) values ('', '" + data.message + "', '" + data.chat + "', NOW(), '" + data.sender + "')";
+        this.con.query(sql, (err, result) => {
+            if(err) throw err;
+            else{
+                console.log("success");
+            }
+        });
+    }
+    getAllMessages(req, res){
+        var id = req.params.id;
+        let sql = "SELECT * from messages WHERE chat_id = " + id + " ORDER BY id";
+        this.con.query(sql, (err, result, field) => {
+            if(err) throw err;
+            res.render('chat', {session : req.session, chat_id : req.params.id, messages : result});
+        });
+    }
 }
+//
 module.exports = DB;

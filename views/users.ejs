@@ -7,14 +7,15 @@
         <h1>Welcome <%= session.username %></h1>
         <p>Your id is <%= session.ids %></p>
         <a href="/logout">Logout</a>
-        <a href="/addnews">Add news</a>
         <a href="/news">News</a>
         <a href="/profile">Profile</a>
-        
-        <ul>
-            <% for(var i = 0; i < data.length; i++) { %>
-            <li><a href="/chat/<%=data[i].id%>/<%=session.ids%>"><%= data[i].username %></a></li>
-            <% } %>
-        </ul>
+
+        Choose whom to talk:
+
+        <% for(var i = 0; i < users.length; i++) { 
+            if(users[i].id != session.ids){
+            %>
+            <a href="/chat/<%= session.ids %>/<%= users[i].id %>"><p><%= users[i].username %></p></a><br>
+        <% } }%>
     </body>
 </html>

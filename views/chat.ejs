@@ -1,74 +1,51 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Welcome to Chat <%= session.username %></title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-    <style>
-      body{
-        margin-top:30px;
-      }
-    </style>
-  </head>
-  <body>
-    <a href="/users">Back</a>
-    <div class="container">
-      <div class="row" id="messageArea">
-          <div class="col-md-4">
-              <div class="well">
-                <h3>Online Users</h3>
-                <ul id="users" class="list-group">
+    <head>
+        <title>Index</title>
+    </head>
+    <body>
+        <h1>Welcome <%= session.username %></h1>
+        <p>Your id is <%= session.ids %></p>
+        <a href="/logout">Logout</a>
+        <a href="/news">News</a>
+        <a href="/profile">Profile</a>
+        <a href="/users">Users List</a>
 
-                </ul>
-              </div>
-          </div>
-          <div class="col-md-8">
-            <div class="chat" id="chat">
-
-            </div>
-            <form action="" id="messageForm">
-              <div class="form-group">
-                <label>Enter Message</label>
-                <textarea id="message" class="form-control"></textarea><br>
-                <input type="submit" class="btn btn-primary" value="Send Message">
-              </div>
-            </form>
-          </div>
-      </div>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script><script
-    src="http://code.jquery.com/jquery-3.2.1.min.js"
-    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-    crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-    <script>
-      $(function(){
-        var socket = io.connect();
-        var $messageForm = $('#messageForm');
-        var $message = $('#message');
-        var $chat = $('#chat');
-
-        $messageForm.submit((e) => {
-          e.preventDefault();
-          if($message.val != ''){
-          socket.emit('send message', {
-            message : $message.val(), 
-            user1 : <%= params.id1 %>, 
-            user2 : <%= params.id2 %>, 
-            sender : `<%= session.username %>`
-          });
-          $message.val('');
-        }
-        });
-        socket.on('new message from ' + <%= params.id1 %> + "to" + <%= params.id2 %>, (data)=> {
-          console.log(data);
-          $chat.append('<div class="well">' + data.sender + ' : ' + data.msg + '</div>');
-        });
+        <div id="chat"></div>
+        <% for(var i = messages.length - 1; i >= 0 ; i--){ %>
+            <div><%= messages[i].sender %> : <%= messages[i].text %></div>
+        <% } %>
+        <form action="" id="messageForm">
+            <label> Enter message : </label>
+            <textarea id="message"></textarea>
+            <input type="submit" value = "Send Message">
+        </form> 
         
-        socket.on('new message from ' + <%= params.id2 %> + "to" + <%= params.id1 %>, (data)=> {
-          console.log(data);
-          $chat.append('<div class="well">' + data.sender + " : " + data.msg + '</div>');
-        });
-      });
-    </script>
-  </body>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script><script
+        src="http://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+        <script>
+           $(function(){
+               var socket = io.connect();
+               var $messageForm = $('#messageForm');
+               var $message = $('#message');
+               var $chat = $('#chat');
+
+               $messageForm.submit( (e) => {
+                   e.preventDefault();
+                   socket.emit('send message' , {
+                       message : $message.val(),
+                       chat : `<%= chat_id %>`,
+                       sender : `<%= session.username %>`
+                   });
+                   $message.val('');
+               });
+
+               socket.on('new message on' + <%= chat_id %>, (data) => {
+                   $chat.append('<div>' + data.sender + ' : ' + data.message + '</div>');
+               });
+           });
+       </script>
+    </body>
 </html>
