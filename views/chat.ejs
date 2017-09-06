@@ -49,6 +49,7 @@
 
         $messageForm.submit((e) => {
           e.preventDefault();
+          if($message.val != ''){
           socket.emit('send message', {
             message : $message.val(), 
             user1 : <%= params.id1 %>, 
@@ -56,6 +57,7 @@
             sender : `<%= session.username %>`
           });
           $message.val('');
+        }
         });
         socket.on('new message from ' + <%= params.id1 %> + "to" + <%= params.id2 %>, (data)=> {
           console.log(data);
